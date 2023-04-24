@@ -2,7 +2,7 @@
 <resources>
 
     <style name="TextStyle" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textColor">#66000014</item>
+        <item name="android:textColor">@color/gray</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -13,11 +13,11 @@
     </style>
 
     <style name="MyDialogFragment" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">#009688</item>
+        <item name="boxStrokeColor">@color/main_color</item>
         <item name="boxCornerRadiusBottomStart">8dp</item>
         <item name="boxCornerRadiusBottomEnd">8dp</item>
         <item name="boxCornerRadiusTopEnd">8dp</item>
         <item name="boxCornerRadiusTopStart">8dp</item>
-        <item name="hintTextColor">#009688</item>
+        <item name="hintTextColor">@color/main_dark_color</item>
     </style>
 </resources>

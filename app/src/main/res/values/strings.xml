@@ -4,4 +4,5 @@
     <string name="search_hint">Введите слово</string>
     <string name="reload_btn">Повторить</string>
     <string name="error">Ошибка!</string>
+    <string name="nothing_to_show">Ничего не найдено!</string>
 </resources>

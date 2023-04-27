@@ -10,7 +10,7 @@ import ru.dk.mydictionary.databinding.SearchItemBinding
 class SearchListAdapter :
     ListAdapter<DictionaryModel, SearchListAdapter.SearchListViewHolder>(SearchListCallback()) {
 
-    inner class SearchListViewHolder(val binding: SearchItemBinding) :
+    inner class SearchListViewHolder(private val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dictionaryModel: DictionaryModel) {
             with(binding) {

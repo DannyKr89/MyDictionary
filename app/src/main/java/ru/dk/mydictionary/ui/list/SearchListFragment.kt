@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.dk.mydictionary.App
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
 import ru.dk.mydictionary.ui.adapters.SearchListAdapter
@@ -19,11 +20,10 @@ class SearchListFragment : Fragment() {
     private val binding get() = _binding!!
     private var adapter = SearchListAdapter()
     private val viewModel: SearchListViewModel by lazy {
-        ViewModelProvider(this)[SearchListViewModel::class.java]
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        ViewModelProvider(
+            this,
+            App.instance.viewModelFactory
+        )[SearchListViewModel::class.java]
     }
 
     override fun onCreateView(

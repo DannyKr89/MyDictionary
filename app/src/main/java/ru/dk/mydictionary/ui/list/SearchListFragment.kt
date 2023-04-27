@@ -6,20 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.dk.mydictionary.App
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
-import ru.dk.mydictionary.presenters.SearchListPresenter
 import ru.dk.mydictionary.ui.adapters.SearchListAdapter
 import ru.dk.mydictionary.ui.search.SearchDialogFragment
 
-class SearchListFragment : Fragment(), SearchListView {
+class SearchListFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var adapter = SearchListAdapter()
-    lateinit var presenter: SearchListPresenter
+    private val viewModel: SearchListViewModel by lazy {
+        ViewModelProvider(this)[SearchListViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +36,11 @@ class SearchListFragment : Fragment(), SearchListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter = App.instance.presenter
-        presenter.attach(this)
 
+        viewModel.getLiveData().observe(viewLifecycleOwner) {
+            renderData(it)
+        }
         initViews()
-
-
     }
 
     private fun initViews() {
@@ -47,7 +51,7 @@ class SearchListFragment : Fragment(), SearchListView {
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {
                     listener = {
-                        presenter.requestData(it)
+                        viewModel.requestData(it)
                     }
                 }.show(parentFragmentManager, "search")
             }
@@ -56,6 +60,7 @@ class SearchListFragment : Fragment(), SearchListView {
 
     override fun onDestroyView() {
         _binding = null
+        viewModel.onClear()
         super.onDestroyView()
     }
 
@@ -63,7 +68,7 @@ class SearchListFragment : Fragment(), SearchListView {
         fun newInstance() = SearchListFragment()
     }
 
-    override fun renderData(appState: AppState) {
+    private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Error -> {
                 with(binding) {
@@ -74,6 +79,7 @@ class SearchListFragment : Fragment(), SearchListView {
                     progressbar.visibility = View.GONE
                 }
             }
+
             is AppState.Loading -> {
                 with(binding) {
                     successLayout.visibility = View.GONE
@@ -81,6 +87,7 @@ class SearchListFragment : Fragment(), SearchListView {
                     progressbar.visibility = View.VISIBLE
                 }
             }
+
             is AppState.Success -> {
                 with(binding) {
                     successLayout.visibility = View.VISIBLE

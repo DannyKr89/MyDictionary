@@ -22,7 +22,7 @@ class SearchListFragment : Fragment() {
     private val viewModel: SearchListViewModel by lazy {
         ViewModelProvider(
             this,
-            App.instance.viewModelFactory
+            App.instance.appComponent.factory
         )[SearchListViewModel::class.java]
     }
 

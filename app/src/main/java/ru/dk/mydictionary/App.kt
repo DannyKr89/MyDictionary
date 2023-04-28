@@ -1,31 +1,22 @@
 package ru.dk.mydictionary
 
 import android.app.Application
-import ru.dk.mydictionary.di.AppComponent
-import ru.dk.mydictionary.di.DaggerAppComponent
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
+import ru.dk.mydictionary.di.repository
+import ru.dk.mydictionary.di.viewModel
+import ru.dk.mydictionary.di.viewModelFactory
 
 class App : Application() {
-
-//    private val retrofit = Retrofit.Builder()
-//        .baseUrl("https://dictionary.skyeng.ru/")
-//        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-//        .addConverterFactory(GsonConverterFactory.create())
-//        .build()
-
-//    private val api: SearchListApi by lazy { retrofit.create(SearchListApi::class.java) }
-//    private val ioScheduler: Scheduler by lazy { Schedulers.io() }
-//    private val uiScheduler: Scheduler by lazy { AndroidSchedulers.mainThread() }
-//    private val repository: SearchListRepo by lazy { SearchListRepoImpl(api, ioScheduler) }
-
-//    val viewModelFactory: ViewModelFactory by lazy {
-//        ViewModelFactory(repository, uiScheduler)
-//    }
-
-    val appComponent: AppComponent by lazy { DaggerAppComponent.create() }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+        startKoin {
+            androidLogger(Level.DEBUG)
+            modules(listOf(repository, viewModelFactory, viewModel))
+        }
 
     }
 

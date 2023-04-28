@@ -38,9 +38,10 @@ android {
 }
 
 dependencies {
-    //Dagger
-    implementation 'com.google.dagger:dagger:2.45'
-    kapt 'com.google.dagger:dagger-compiler:2.45'
+
+    //Koin
+    implementation 'io.insert-koin:koin-core:3.4.0'
+    implementation 'io.insert-koin:koin-android:3.4.0'
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

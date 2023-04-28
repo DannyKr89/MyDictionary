@@ -13,17 +13,22 @@ import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
 import ru.dk.mydictionary.ui.adapters.SearchListAdapter
 import ru.dk.mydictionary.ui.search.SearchDialogFragment
+import javax.inject.Inject
 
 class SearchListFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var adapter = SearchListAdapter()
-    private val viewModel: SearchListViewModel by lazy {
-        ViewModelProvider(
-            this,
-            App.instance.viewModelFactory
-        )[SearchListViewModel::class.java]
+
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private lateinit var viewModel: SearchListViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        App.instance.appComponent.inject(this)
+        viewModel = ViewModelProvider(this, factory)[SearchListViewModel::class.java]
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -60,7 +65,7 @@ class SearchListFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.onClear()
+//        viewModel.onClear()
         super.onDestroyView()
     }
 

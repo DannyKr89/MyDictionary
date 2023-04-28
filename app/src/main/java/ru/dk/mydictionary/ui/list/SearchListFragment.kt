@@ -65,7 +65,7 @@ class SearchListFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-//        viewModel.onClear()
+        viewModel.onClear()
         super.onDestroyView()
     }
 

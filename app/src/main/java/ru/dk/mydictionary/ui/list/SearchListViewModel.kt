@@ -10,11 +10,10 @@ import ru.dk.mydictionary.data.state.AppState
 
 class SearchListViewModel(
     private val repository: SearchListRepo,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val liveData: MutableLiveData<AppState>,
+    private val compositeDisposable: CompositeDisposable
 ) : ViewModel() {
-
-    private val liveData: MutableLiveData<AppState> = MutableLiveData()
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun getLiveData() = liveData
 

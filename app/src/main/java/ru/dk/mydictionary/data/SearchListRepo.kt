@@ -1,8 +1,8 @@
 package ru.dk.mydictionary.data
 
-import io.reactivex.rxjava3.core.Single
+import retrofit2.Call
 import ru.dk.mydictionary.data.model.DictionaryModel
 
 interface SearchListRepo {
-    fun getData(word: String): Single<List<DictionaryModel>>
+    suspend fun getDataAsync(word: String): Call<List<DictionaryModel>>
 }

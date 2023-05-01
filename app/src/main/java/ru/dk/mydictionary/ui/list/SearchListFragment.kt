@@ -50,12 +50,14 @@ class SearchListFragment : Fragment() {
                     }
                 }.show(parentFragmentManager, "search")
             }
+            reloadBtn.setOnClickListener {
+                viewModel.getLastRequest()
+            }
         }
     }
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.onClear()
         super.onDestroyView()
     }
 

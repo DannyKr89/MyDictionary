@@ -1,10 +1,13 @@
 package ru.dk.mydictionary.data
 
-import io.reactivex.rxjava3.core.Scheduler
+import retrofit2.Call
+import ru.dk.mydictionary.data.model.DictionaryModel
 import ru.dk.mydictionary.data.retrofit.SearchListApi
 
-class SearchListRepoImpl(private val api: SearchListApi, private val ioSchedulers: Scheduler) :
+class SearchListRepoImpl(private val api: SearchListApi) :
     SearchListRepo {
 
-    override fun getData(word: String) = api.getList(word).subscribeOn(ioSchedulers)
+    override suspend fun getDataAsync(word: String): Call<List<DictionaryModel>> {
+        return api.getList(word)
+    }
 }

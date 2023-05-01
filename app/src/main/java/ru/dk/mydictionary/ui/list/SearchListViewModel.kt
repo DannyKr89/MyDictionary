@@ -2,36 +2,34 @@ package ru.dk.mydictionary.ui.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.subscribeBy
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.await
 import ru.dk.mydictionary.data.SearchListRepo
 import ru.dk.mydictionary.data.state.AppState
 
 class SearchListViewModel(
     private val repository: SearchListRepo,
-    private val uiScheduler: Scheduler,
     private val liveData: MutableLiveData<AppState>,
-    private val compositeDisposable: CompositeDisposable
 ) : ViewModel() {
+    private var lastWord: String? = null
 
     fun getLiveData() = liveData
 
     fun requestData(word: String) {
-        compositeDisposable.add(
-            repository.getData(word).observeOn(uiScheduler)
-                .doOnSubscribe { liveData.postValue(AppState.Loading) }
-                .subscribeBy(
-                    onError = {
-                        liveData.postValue(AppState.Error(it))
-                    },
-                    onSuccess = {
-                        liveData.postValue(AppState.Success(it))
-                    }
-                ))
+        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable: Throwable ->
+            liveData.postValue(AppState.Error(throwable))
+        }) {
+            liveData.postValue(AppState.Loading)
+            val result = repository.getDataAsync(word).await()
+            liveData.postValue(AppState.Success(result))
+        }
+        lastWord = word
     }
 
-    fun onClear() {
-        compositeDisposable.clear()
+    fun getLastRequest() {
+        lastWord?.let { requestData(it) }
     }
 }

@@ -1,24 +1,17 @@
 package ru.dk.mydictionary
 
 import android.app.Application
-import ru.dk.mydictionary.data.SearchListRepo
-import ru.dk.mydictionary.data.SearchListRepoImpl
-import ru.dk.mydictionary.presenters.SearchListPresenter
-import ru.dk.mydictionary.presenters.SearchListPresenterImpl
+import ru.dk.mydictionary.di.AppComponent
+import ru.dk.mydictionary.di.DaggerAppComponent
 
 class App : Application() {
 
-    private val repository: SearchListRepo by lazy {
-        SearchListRepoImpl()
-    }
-
-    val presenter: SearchListPresenter by lazy {
-        SearchListPresenterImpl(repository)
-    }
+    val appComponent: AppComponent by lazy { DaggerAppComponent.create() }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+
     }
 
     companion object {

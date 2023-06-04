@@ -7,13 +7,16 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.dk.mydictionary.data.SearchListRepo
+import ru.dk.mydictionary.data.room.HistoryDatabase
+import ru.dk.mydictionary.data.room.HistoryWord
 import ru.dk.mydictionary.data.state.AppState
 
 class SearchListViewModel(
     private val repository: SearchListRepo,
-    private val liveData: MutableLiveData<AppState>,
+    private val liveData: MutableLiveData<AppState> = MutableLiveData(),
     private val scope: CoroutineScope,
-    private var job: Job? = null
+    private var job: Job? = null,
+    private val db: HistoryDatabase
 
 ) : ViewModel() {
     private var lastWord: String? = null
@@ -29,6 +32,14 @@ class SearchListViewModel(
                 }
                 .collect() {
                     liveData.postValue(AppState.Success(it))
+                    if (it.isNotEmpty()) {
+                        db.historyDao().insert(
+                            HistoryWord(
+                                it.first().text!!,
+                                it.first().meanings!!.first().translation!!.text
+                            )
+                        )
+                    }
                 }
         }
         lastWord = word

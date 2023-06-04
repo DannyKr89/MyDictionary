@@ -1,6 +1,8 @@
 package ru.dk.mydictionary.di
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -11,6 +13,7 @@ import ru.dk.mydictionary.data.SearchListRepoImpl
 import ru.dk.mydictionary.data.retrofit.SearchListApi
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.ui.list.SearchListViewModel
+import tech.thdev.network.flowcalladapterfactory.FlowCallAdapterFactory
 
 val repository = module {
     single<String>(named("baseUrl")) { "https://dictionary.skyeng.ru/" }
@@ -18,12 +21,15 @@ val repository = module {
     single<Retrofit> {
         Retrofit.Builder().baseUrl(get<String>(named("baseUrl")))
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(FlowCallAdapterFactory())
             .build()
     }
 
     single<SearchListApi> { get<Retrofit>().create(SearchListApi::class.java) }
 
     single<SearchListRepo> { SearchListRepoImpl(api = get()) }
+
+    single<CoroutineScope> { CoroutineScope(Dispatchers.IO) }
 }
 
 
@@ -35,7 +41,8 @@ val viewModel = module {
     viewModel {
         SearchListViewModel(
             repository = get(),
-            liveData = get()
+            liveData = get(),
+            scope = get()
         )
     }
 }

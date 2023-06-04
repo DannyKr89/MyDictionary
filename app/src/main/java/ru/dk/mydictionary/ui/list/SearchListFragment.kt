@@ -58,6 +58,7 @@ class SearchListFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
+        viewModel.cancelJob()
         super.onDestroyView()
     }
 

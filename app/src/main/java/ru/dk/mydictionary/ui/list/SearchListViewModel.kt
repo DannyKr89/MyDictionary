@@ -2,9 +2,9 @@ package ru.dk.mydictionary.ui.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.dk.mydictionary.data.SearchListRepo
 import ru.dk.mydictionary.data.state.AppState
@@ -12,23 +12,33 @@ import ru.dk.mydictionary.data.state.AppState
 class SearchListViewModel(
     private val repository: SearchListRepo,
     private val liveData: MutableLiveData<AppState>,
+    private val scope: CoroutineScope,
+    private var job: Job? = null
+
 ) : ViewModel() {
     private var lastWord: String? = null
 
     fun getLiveData() = liveData
 
     fun requestData(word: String) {
-        viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable: Throwable ->
-            liveData.postValue(AppState.Error(throwable))
-        }) {
+        job = scope.launch {
             liveData.postValue(AppState.Loading)
-            val result = repository.getDataAsync(word)
-            liveData.postValue(AppState.Success(result))
+            repository.getDataAsync(word)
+                .catch {
+                    liveData.postValue(AppState.Error(it))
+                }
+                .collect() {
+                    liveData.postValue(AppState.Success(it))
+                }
         }
         lastWord = word
     }
 
     fun getLastRequest() {
         lastWord?.let { requestData(it) }
+    }
+
+    fun cancelJob() {
+        job?.cancel()
     }
 }

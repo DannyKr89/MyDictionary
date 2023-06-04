@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.dk.mydictionary.App
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
 import ru.dk.mydictionary.ui.adapters.SearchListAdapter
 import ru.dk.mydictionary.ui.search.SearchDialogFragment
-import javax.inject.Inject
 
 class SearchListFragment : Fragment() {
 
@@ -21,15 +19,7 @@ class SearchListFragment : Fragment() {
     private val binding get() = _binding!!
     private var adapter = SearchListAdapter()
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private lateinit var viewModel: SearchListViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        App.instance.appComponent.inject(this)
-        viewModel = ViewModelProvider(this, factory)[SearchListViewModel::class.java]
-        super.onCreate(savedInstanceState)
-    }
+    private val viewModel: SearchListViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,12 +50,14 @@ class SearchListFragment : Fragment() {
                     }
                 }.show(parentFragmentManager, "search")
             }
+            reloadBtn.setOnClickListener {
+                viewModel.getLastRequest()
+            }
         }
     }
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.onClear()
         super.onDestroyView()
     }
 

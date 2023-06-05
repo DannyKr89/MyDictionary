@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import ru.dk.mydictionary.data.WordListRepo
+import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.data.state.AppState
 
 class HistoryViewModel(
@@ -30,7 +30,7 @@ class HistoryViewModel(
                     liveData.postValue(AppState.Error(it))
                 }
                 .collect() {
-                    liveData.postValue(AppState.Success(it))
+                    liveData.postValue(AppState.Success(it.reversed()))
                 }
         }
     }

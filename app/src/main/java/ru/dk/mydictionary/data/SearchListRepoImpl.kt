@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.await
 import ru.dk.mydictionary.data.model.DictionaryModel
 import ru.dk.mydictionary.data.retrofit.SearchListApi
+import ru.dk.mydictionary.domain.WordListRepo
 
 class SearchListRepoImpl(private val api: SearchListApi) :
     WordListRepo {

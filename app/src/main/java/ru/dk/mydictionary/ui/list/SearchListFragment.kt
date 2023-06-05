@@ -46,6 +46,7 @@ class SearchListFragment : Fragment() {
             searchListRv.layoutManager = LinearLayoutManager(requireContext())
             searchListRv.adapter = adapter.apply {
                 listener = {
+                    viewModel.saveWordToHistory(it)
                     parentFragmentManager.beginTransaction()
                         .replace(
                             R.id.main_container,
@@ -55,7 +56,7 @@ class SearchListFragment : Fragment() {
                         )
                         .addToBackStack(it.text)
                         .commit()
-                }
+            }
             }
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {

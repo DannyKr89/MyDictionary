@@ -6,11 +6,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import ru.dk.mydictionary.data.WordListRepo
+import ru.dk.mydictionary.data.convertHistoryToModel
 import ru.dk.mydictionary.data.model.DictionaryModel
 import ru.dk.mydictionary.data.room.HistoryDatabase
 import ru.dk.mydictionary.data.room.HistoryWord
 import ru.dk.mydictionary.data.state.AppState
+import ru.dk.mydictionary.domain.WordListRepo
 
 class SearchListViewModel(
     private val repository: WordListRepo,
@@ -30,26 +31,45 @@ class SearchListViewModel(
 
         job = scope.launch {
             liveData.postValue(AppState.Loading)
-            repository.getDataAsync(word)
-                .catch {
-                    liveData.postValue(AppState.Error(it))
+            if (isWordInHistory(word)) {
+                val historyWord = db.historyDao().getWord(word)?.let {
+                    convertHistoryToModel(it)
                 }
-                .collect() {
-                    liveData.postValue(AppState.Success(it))
-                    if (it.isNotEmpty()) {
-                        db.historyDao().insert(saveWordToHistory(it))
+                liveData.postValue(AppState.Success(listOf(historyWord!!)))
+            } else {
+                repository.getDataAsync(word)
+                    .catch {
+                        liveData.postValue(AppState.Error(it))
+                    }.collect() {
+                        liveData.postValue(AppState.Success(it))
+                        if (it.isNotEmpty()) {
+                            saveWordToHistory(it.first())
+                        }
                     }
-                }
+            }
+
         }
     }
 
-    private fun saveWordToHistory(list: List<DictionaryModel>): HistoryWord {
-        return HistoryWord(
-            list.first().text!!,
-            list.first().meanings!!.first().translation?.text,
-            list.first().meanings!!.first().transcription,
-            list.first().meanings!!.first().imageUrl,
-        )
+    private suspend fun isWordInHistory(word: String): Boolean {
+        if (db.historyDao().getWord(word) != null) {
+            return true
+        }
+        return false
+    }
+
+    fun saveWordToHistory(dictionaryModel: DictionaryModel) {
+        job = scope.launch {
+            db.historyDao().insert(
+                HistoryWord(
+                    dictionaryModel.text!!,
+                    dictionaryModel.meanings?.first()?.translation?.text,
+                    dictionaryModel.meanings?.first()?.transcription,
+                    dictionaryModel.meanings?.first()?.imageUrl,
+                )
+            )
+        }
+
     }
 
     fun getLastRequest() {

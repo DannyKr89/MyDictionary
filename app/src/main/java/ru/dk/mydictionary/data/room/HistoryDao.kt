@@ -11,6 +11,9 @@ interface HistoryDao {
     @Query("select * from HistoryWord")
     suspend fun getAll(): List<HistoryWord>
 
+    @Query("select * from HistoryWord where word like :word")
+    suspend fun getWord(word: String): HistoryWord?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(word: HistoryWord)
 

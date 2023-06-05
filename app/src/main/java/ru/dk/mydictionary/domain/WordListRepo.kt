@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data
+package ru.dk.mydictionary.domain
 
 import kotlinx.coroutines.flow.Flow
 import ru.dk.mydictionary.data.model.DictionaryModel

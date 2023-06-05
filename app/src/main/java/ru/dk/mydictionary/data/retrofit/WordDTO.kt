@@ -1,14 +1,12 @@
-package ru.dk.mydictionary.data.model
+package ru.dk.mydictionary.data.retrofit
 
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class DictionaryModel(
+
+data class WordDTO(
     @SerializedName("meanings")
     val meanings: List<Meaning>?,
     @SerializedName("text")
     val text: String?
-) : Parcelable
+)

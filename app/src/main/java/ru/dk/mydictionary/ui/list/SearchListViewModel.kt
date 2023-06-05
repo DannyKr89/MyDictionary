@@ -6,8 +6,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import ru.dk.mydictionary.data.convertHistoryToModel
-import ru.dk.mydictionary.data.model.DictionaryModel
+import ru.dk.mydictionary.data.convertHistoryToWord
+import ru.dk.mydictionary.data.model.Word
 import ru.dk.mydictionary.data.room.HistoryDatabase
 import ru.dk.mydictionary.data.room.HistoryWord
 import ru.dk.mydictionary.data.state.AppState
@@ -33,7 +33,7 @@ class SearchListViewModel(
             liveData.postValue(AppState.Loading)
             if (isWordInHistory(word)) {
                 val historyWord = db.historyDao().getWord(word)?.let {
-                    convertHistoryToModel(it)
+                    convertHistoryToWord(it)
                 }
                 liveData.postValue(AppState.Success(listOf(historyWord!!)))
             } else {
@@ -58,14 +58,14 @@ class SearchListViewModel(
         return false
     }
 
-    fun saveWordToHistory(dictionaryModel: DictionaryModel) {
+    fun saveWordToHistory(word: Word) {
         job = scope.launch {
             db.historyDao().insert(
                 HistoryWord(
-                    dictionaryModel.text!!,
-                    dictionaryModel.meanings?.first()?.translation?.text,
-                    dictionaryModel.meanings?.first()?.transcription,
-                    dictionaryModel.meanings?.first()?.imageUrl,
+                    word.word,
+                    word.translation,
+                    word.transcription,
+                    word.imageUrl,
                 )
             )
         }

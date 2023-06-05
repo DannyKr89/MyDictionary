@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data.room
+package com.example.history.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -1,10 +1,9 @@
 package ru.dk.mydictionary.data
 
+import com.example.api.retrofit.model.WordDTO
 import ru.dk.mydictionary.data.model.Word
-import ru.dk.mydictionary.data.retrofit.WordDTO
-import ru.dk.mydictionary.data.room.HistoryWord
 
-fun convertHistoryToWord(historyWord: HistoryWord): Word {
+fun convertHistoryToWord(historyWord: com.example.history.room.HistoryWord): Word {
     return Word(
         word = historyWord.word,
         imageUrl = historyWord.imageUrl,

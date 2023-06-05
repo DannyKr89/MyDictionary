@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data.retrofit
+package com.example.api.retrofit.model
 
 
 import com.google.gson.annotations.SerializedName

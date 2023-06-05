@@ -1,5 +1,6 @@
-package ru.dk.mydictionary.data.retrofit
+package com.example.api.retrofit
 
+import com.example.api.retrofit.model.WordDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

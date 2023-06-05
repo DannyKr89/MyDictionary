@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.dk.mydictionary.data.convertHistoryToWord
 import ru.dk.mydictionary.data.model.Word
-import ru.dk.mydictionary.data.room.HistoryDatabase
-import ru.dk.mydictionary.data.room.HistoryWord
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.domain.WordListRepo
 
@@ -18,7 +16,7 @@ class SearchListViewModel(
     private val liveData: MutableLiveData<AppState> = MutableLiveData(),
     private val scope: CoroutineScope,
     private var job: Job? = null,
-    private val db: HistoryDatabase
+    private val db: com.example.history.room.HistoryDatabase
 
 ) : ViewModel() {
     private var lastWord: String? = null
@@ -61,7 +59,7 @@ class SearchListViewModel(
     fun saveWordToHistory(word: Word) {
         job = scope.launch {
             db.historyDao().insert(
-                HistoryWord(
+                com.example.history.room.HistoryWord(
                     word.word,
                     word.translation,
                     word.transcription,

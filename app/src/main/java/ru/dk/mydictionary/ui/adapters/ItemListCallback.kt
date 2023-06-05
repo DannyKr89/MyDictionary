@@ -3,7 +3,7 @@ package ru.dk.mydictionary.ui.adapters
 import androidx.recyclerview.widget.DiffUtil
 import ru.dk.mydictionary.data.model.DictionaryModel
 
-class SearchListCallback : DiffUtil.ItemCallback<DictionaryModel>() {
+class ItemListCallback : DiffUtil.ItemCallback<DictionaryModel>() {
     override fun areItemsTheSame(oldItem: DictionaryModel, newItem: DictionaryModel): Boolean {
         return oldItem.text == newItem.text
     }

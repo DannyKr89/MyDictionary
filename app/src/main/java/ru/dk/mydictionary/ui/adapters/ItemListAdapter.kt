@@ -7,13 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.dk.mydictionary.data.model.DictionaryModel
 import ru.dk.mydictionary.databinding.ListItemBinding
 
-class SearchListAdapter :
-    ListAdapter<DictionaryModel, SearchListAdapter.SearchListViewHolder>(SearchListCallback()) {
+class ItemListAdapter :
+    ListAdapter<DictionaryModel, ItemListAdapter.SearchListViewHolder>(ItemListCallback()) {
+
+    var listener: ((DictionaryModel) -> Unit)? = null
 
     inner class SearchListViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dictionaryModel: DictionaryModel) {
             with(binding) {
+                root.setOnClickListener {
+                    listener?.invoke(dictionaryModel)
+                }
                 titleListItem.text = dictionaryModel.text
                 descriptionListItem.text = dictionaryModel.meanings?.first()?.translation?.text
             }

@@ -11,5 +11,9 @@ data class HistoryWord(
     @ColumnInfo(name = "word")
     val word: String,
     @ColumnInfo(name = "translation")
-    val translation: String?
+    val translation: String?,
+    @ColumnInfo(name = "transcription")
+    val transcription: String?,
+    @ColumnInfo(name = "image")
+    val imageUrl: String?,
 )

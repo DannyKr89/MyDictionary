@@ -10,8 +10,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.dk.mydictionary.data.SearchListRepo
+import ru.dk.mydictionary.data.HistoryListRepoImpl
 import ru.dk.mydictionary.data.SearchListRepoImpl
+import ru.dk.mydictionary.data.WordListRepo
 import ru.dk.mydictionary.data.retrofit.SearchListApi
 import ru.dk.mydictionary.data.room.HistoryDatabase
 import ru.dk.mydictionary.data.state.AppState
@@ -31,7 +32,9 @@ val repository = module {
 
     single<SearchListApi> { get<Retrofit>().create(SearchListApi::class.java) }
 
-    single<SearchListRepo> { SearchListRepoImpl(api = get()) }
+    single<WordListRepo>(named("search")) { SearchListRepoImpl(api = get()) }
+
+    single<WordListRepo>(named("history")) { HistoryListRepoImpl(db = get()) }
 
     single<CoroutineScope> { CoroutineScope(Dispatchers.IO) }
 }
@@ -43,8 +46,7 @@ val viewModel = module {
 
     viewModel {
         SearchListViewModel(
-            repository = get(),
-            liveData = get(),
+            repository = get(named("search")),
             scope = get(),
             db = get()
         )
@@ -52,7 +54,8 @@ val viewModel = module {
 
     viewModel {
         HistoryViewModel(
-            db = get()
+            repository = get(named("history")),
+            scope = get()
         )
     }
 

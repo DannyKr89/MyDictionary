@@ -8,16 +8,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.dk.mydictionary.R
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
-import ru.dk.mydictionary.ui.adapters.SearchListAdapter
+import ru.dk.mydictionary.ui.adapters.ItemListAdapter
+import ru.dk.mydictionary.ui.description.DescriptionFragment
 import ru.dk.mydictionary.ui.search.SearchDialogFragment
 
 class SearchListFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private var adapter = SearchListAdapter()
+    private var adapter = ItemListAdapter()
 
     private val viewModel: SearchListViewModel by viewModel()
 
@@ -42,7 +44,19 @@ class SearchListFragment : Fragment() {
 
         with(binding) {
             searchListRv.layoutManager = LinearLayoutManager(requireContext())
-            searchListRv.adapter = adapter
+            searchListRv.adapter = adapter.apply {
+                listener = {
+                    parentFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.main_container,
+                            DescriptionFragment.newInstance(Bundle().apply {
+                                putParcelable("word", it)
+                            })
+                        )
+                        .addToBackStack(it.text)
+                        .commit()
+                }
+            }
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {
                     listener = {
@@ -58,7 +72,7 @@ class SearchListFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.cancelJob()
+        viewModel.onClear()
         super.onDestroyView()
     }
 

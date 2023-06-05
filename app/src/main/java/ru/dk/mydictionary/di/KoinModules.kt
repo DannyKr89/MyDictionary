@@ -12,10 +12,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.dk.mydictionary.data.HistoryListRepoImpl
 import ru.dk.mydictionary.data.SearchListRepoImpl
-import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.data.retrofit.SearchListApi
 import ru.dk.mydictionary.data.room.HistoryDatabase
 import ru.dk.mydictionary.data.state.AppState
+import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.ui.history.HistoryViewModel
 import ru.dk.mydictionary.ui.list.SearchListViewModel
 import tech.thdev.network.flowcalladapterfactory.FlowCallAdapterFactory

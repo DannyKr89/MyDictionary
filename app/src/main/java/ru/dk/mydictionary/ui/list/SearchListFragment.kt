@@ -56,7 +56,7 @@ class SearchListFragment : Fragment() {
                         )
                         .addToBackStack(it.text)
                         .commit()
-            }
+                }
             }
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {

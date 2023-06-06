@@ -1,9 +1,11 @@
-package ru.dk.mydictionary.data
+package ru.dk.mydictionary.utils
+
 
 import com.example.api.retrofit.model.WordDTO
+import com.example.history.room.HistoryWord
 import ru.dk.mydictionary.data.model.Word
 
-fun convertHistoryToWord(historyWord: com.example.history.room.HistoryWord): Word {
+fun convertHistoryToWord(historyWord: HistoryWord): Word {
     return Word(
         word = historyWord.word,
         imageUrl = historyWord.imageUrl,
@@ -14,9 +16,9 @@ fun convertHistoryToWord(historyWord: com.example.history.room.HistoryWord): Wor
 
 fun convertDTOToModel(wordDTO: WordDTO): Word {
     return Word(
-        word = wordDTO.text ?: "",
-        translation = wordDTO.meanings?.first()?.translation?.text ?: "",
-        transcription = wordDTO.meanings?.first()?.transcription,
-        imageUrl = wordDTO.meanings?.first()?.imageUrl
+        word = wordDTO.text,
+        translation = wordDTO.meanings.first().translation.text,
+        transcription = wordDTO.meanings.first().transcription,
+        imageUrl = wordDTO.meanings.first().imageUrl
     )
 }

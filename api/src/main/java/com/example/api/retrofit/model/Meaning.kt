@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
 
 data class Meaning(
     @SerializedName("imageUrl")
-    val imageUrl: String?,
+    val imageUrl: String = "",
     @SerializedName("soundUrl")
-    val soundUrl: String?,
+    val soundUrl: String = "",
     @SerializedName("transcription")
-    val transcription: String?,
+    val transcription: String = "",
     @SerializedName("translation")
-    val translation: Translation?
+    val translation: Translation = Translation()
 )

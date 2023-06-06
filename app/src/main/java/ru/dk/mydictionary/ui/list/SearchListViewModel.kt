@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import ru.dk.mydictionary.data.convertHistoryToWord
+import ru.dk.mydictionary.utils.convertHistoryToWord
 import ru.dk.mydictionary.data.model.Word
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.domain.WordListRepo

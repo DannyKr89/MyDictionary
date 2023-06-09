@@ -5,13 +5,13 @@ import com.example.api.retrofit.SearchListApi
 import com.example.history.room.HistoryDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.dk.mydictionary.data.HistoryListRepoImpl
+import ru.dk.mydictionary.data.OnlineLiveData
 import ru.dk.mydictionary.data.SearchListRepoImpl
 import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.ui.adapters.ItemListAdapter
@@ -37,6 +37,8 @@ val searchModule = module {
 
 val appModule = module {
 
+    single { OnlineLiveData(get()) }
+
     factory<CoroutineScope> { CoroutineScope(Dispatchers.IO) }
 
     single<SearchListApi> { get<Retrofit>().create(SearchListApi::class.java) }
@@ -52,7 +54,7 @@ val appModule = module {
 
     single {
         Room.databaseBuilder(
-            androidContext(),
+            get(),
             HistoryDatabase::class.java,
             "historyDB"
         ).build()

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.dk.mydictionary.data.state.AppState
@@ -37,6 +38,7 @@ class HistoryViewModel(
 
     fun onClear() {
         job?.cancel()
+        scope.cancel()
     }
 
 }

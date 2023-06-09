@@ -5,19 +5,18 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import ru.dk.mydictionary.di.repository
-import ru.dk.mydictionary.di.room
-import ru.dk.mydictionary.di.viewModel
+import ru.dk.mydictionary.di.appModule
+import ru.dk.mydictionary.di.historyModule
+import ru.dk.mydictionary.di.searchModule
 
 class App : Application() {
-
     override fun onCreate() {
         super.onCreate()
         instance = this
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(listOf(repository, viewModel, room))
+            modules(listOf(appModule, searchModule, historyModule))
         }
 
     }

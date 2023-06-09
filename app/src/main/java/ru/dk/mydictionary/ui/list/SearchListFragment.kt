@@ -71,10 +71,10 @@ class SearchListFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         _binding = null
         viewModel.onClear()
-        super.onDestroyView()
+        super.onDestroy()
     }
 
     companion object {

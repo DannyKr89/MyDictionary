@@ -11,4 +11,5 @@
     <string name="word">Слово:</string>
     <string name="transcription">Транскрипция:</string>
     <string name="translation">Перевод:</string>
+    <string name="dialog_message_device_is_offline">Нет интернета</string>
 </resources>

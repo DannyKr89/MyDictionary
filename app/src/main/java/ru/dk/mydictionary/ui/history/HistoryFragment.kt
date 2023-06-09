@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.getKoin
+import org.koin.core.scope.Scope
 import ru.dk.mydictionary.R
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentHistoryBinding
@@ -20,11 +21,18 @@ class HistoryFragment : Fragment() {
         fun newInstance() = HistoryFragment()
     }
 
+    private val scope: Scope by lazy {
+        getKoin().getOrCreateScope<HistoryFragment>("")
+    }
+
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
-    private var adapter = ItemListAdapter()
 
-    private val viewModel: HistoryViewModel by viewModel()
+    private val viewModel: HistoryViewModel by lazy {
+        scope.get()
+    }
+
+    private val adapter: ItemListAdapter by lazy { scope.get<ItemListAdapter>() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,12 +42,9 @@ class HistoryFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.getLiveData().observe(viewLifecycleOwner) {
             renderData(it)
         }
@@ -95,9 +100,10 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         _binding = null
         viewModel.onClear()
-        super.onDestroyView()
+        scope.close()
+        super.onDestroy()
     }
 }

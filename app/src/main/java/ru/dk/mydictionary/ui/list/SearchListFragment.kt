@@ -1,5 +1,6 @@
 package ru.dk.mydictionary.ui.list
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.dk.mydictionary.R
+import ru.dk.mydictionary.data.OnlineLiveData
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
 import ru.dk.mydictionary.ui.adapters.ItemListAdapter
@@ -22,6 +25,8 @@ class SearchListFragment : Fragment() {
     private var adapter = ItemListAdapter()
 
     private val viewModel: SearchListViewModel by viewModel()
+    private val onlineLiveData: OnlineLiveData by inject()
+    private var isNetworkAvailable: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +43,20 @@ class SearchListFragment : Fragment() {
             renderData(it)
         }
         initViews()
+        subscribeToNetworkChange()
+    }
+
+    private fun subscribeToNetworkChange() {
+        onlineLiveData.observe(viewLifecycleOwner) {
+            isNetworkAvailable = it
+            if (!isNetworkAvailable) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.dialog_message_device_is_offline,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun initViews() {
@@ -61,7 +80,14 @@ class SearchListFragment : Fragment() {
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {
                     listener = {
-                        viewModel.requestData(it)
+                        if (isNetworkAvailable) {
+                            viewModel.requestData(it)
+                        } else {
+                            AlertDialog.Builder(requireContext())
+                                .setMessage(R.string.dialog_message_device_is_offline)
+                                .setTitle(R.string.search)
+                                .show()
+                        }
                     }
                 }.show(parentFragmentManager, "search")
             }
@@ -71,10 +97,10 @@ class SearchListFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         _binding = null
         viewModel.onClear()
-        super.onDestroyView()
+        super.onDestroy()
     }
 
     companion object {

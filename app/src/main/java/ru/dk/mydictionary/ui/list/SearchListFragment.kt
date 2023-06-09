@@ -1,6 +1,9 @@
 package ru.dk.mydictionary.ui.list
 
 import android.app.AlertDialog
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.dk.mydictionary.R
-import ru.dk.mydictionary.data.OnlineLiveData
 import ru.dk.mydictionary.data.state.AppState
 import ru.dk.mydictionary.databinding.FragmentSearchBinding
 import ru.dk.mydictionary.ui.adapters.ItemListAdapter
 import ru.dk.mydictionary.ui.description.DescriptionFragment
 import ru.dk.mydictionary.ui.search.SearchDialogFragment
+import ru.dk.mydictionary.utils.BlurEffect
+import ru.dk.mydictionary.utils.OnlineLiveData
 
 class SearchListFragment : Fragment() {
 
@@ -27,6 +31,7 @@ class SearchListFragment : Fragment() {
     private val viewModel: SearchListViewModel by viewModel()
     private val onlineLiveData: OnlineLiveData by inject()
     private var isNetworkAvailable: Boolean = true
+    private val blur: BlurEffect by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +48,22 @@ class SearchListFragment : Fragment() {
             renderData(it)
         }
         initViews()
+        subscribeBlurLiveData()
         subscribeToNetworkChange()
+    }
+
+    private fun subscribeBlurLiveData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            blur.observe(viewLifecycleOwner) {
+                binding.root.setRenderEffect(
+                    RenderEffect.createBlurEffect(
+                        it,
+                        it,
+                        Shader.TileMode.MIRROR
+                    )
+                )
+            }
+        }
     }
 
     private fun subscribeToNetworkChange() {
@@ -78,10 +98,14 @@ class SearchListFragment : Fragment() {
                 }
             }
             searchFab.setOnClickListener {
+                viewModel.getBlur().postValue(16f)
                 SearchDialogFragment.newInstance().apply {
                     listener = {
                         if (isNetworkAvailable) {
                             viewModel.requestData(it)
+
+                            viewModel.getBlur().postValue(0.01f)
+
                         } else {
                             AlertDialog.Builder(requireContext())
                                 .setMessage(R.string.dialog_message_device_is_offline)
@@ -111,7 +135,11 @@ class SearchListFragment : Fragment() {
         when (appState) {
             is AppState.Error -> {
                 with(binding) {
-                    Toast.makeText(requireContext(), appState.throwable.message, Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        appState.throwable.message,
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     successLayout.visibility = View.GONE
                     errorLayout.visibility = View.VISIBLE

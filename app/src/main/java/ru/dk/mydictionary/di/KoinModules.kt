@@ -11,13 +11,14 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.dk.mydictionary.data.HistoryListRepoImpl
-import ru.dk.mydictionary.data.OnlineLiveData
 import ru.dk.mydictionary.data.SearchListRepoImpl
 import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.ui.adapters.ItemListAdapter
 import ru.dk.mydictionary.ui.history.HistoryFragment
 import ru.dk.mydictionary.ui.history.HistoryViewModel
 import ru.dk.mydictionary.ui.list.SearchListViewModel
+import ru.dk.mydictionary.utils.BlurEffect
+import ru.dk.mydictionary.utils.OnlineLiveData
 import tech.thdev.network.flowcalladapterfactory.FlowCallAdapterFactory
 
 val searchModule = module {
@@ -38,6 +39,7 @@ val searchModule = module {
 val appModule = module {
 
     single { OnlineLiveData(get()) }
+    single { BlurEffect() }
 
     factory<CoroutineScope> { CoroutineScope(Dispatchers.IO) }
 

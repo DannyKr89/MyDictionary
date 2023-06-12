@@ -1,6 +1,7 @@
 package ru.dk.mydictionary.ui
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -45,17 +46,20 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (supportFragmentManager.popBackStackImmediate())
-        AlertDialog.Builder(this)
-            .setTitle("Exit")
-            .setMessage("Are you sure?")
-            .setNegativeButton("No") { dialogInterface, _ ->
-                dialogInterface.cancel()
-            }
-            .setPositiveButton("Yes") { _, _ -> finish() }
-            .show()
+        if (!supportFragmentManager.popBackStackImmediate()) {
+            AlertDialog.Builder(this)
+                .setTitle("Exit")
+                .setMessage("Are you sure?")
+                .setNegativeButton("No") { dialogInterface, _ ->
+                    dialogInterface.cancel()
+                }
+                .setPositiveButton("Yes") { _, _ -> finish() }
+                .show()
+        }
     }
+
 
     private fun openFragment(newInstance: Fragment) {
         if (supportFragmentManager.fragments.isNotEmpty()) {

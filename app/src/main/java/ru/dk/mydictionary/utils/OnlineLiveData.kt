@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data
+package ru.dk.mydictionary.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

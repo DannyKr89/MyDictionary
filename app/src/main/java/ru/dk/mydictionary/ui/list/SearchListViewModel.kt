@@ -15,12 +15,19 @@ import ru.dk.mydictionary.utils.convertHistoryToWord
 class SearchListViewModel(
     private val repository: WordListRepo,
     private val liveData: MutableLiveData<AppState> = MutableLiveData(),
+    private val blur: MutableLiveData<Float> = MutableLiveData(),
     private val scope: CoroutineScope,
     private var job: Job? = null,
     private val db: com.example.history.room.HistoryDatabase
 
 ) : ViewModel() {
+    init {
+        blur.postValue(0.01f)
+    }
+
     private var lastWord: String? = null
+
+    fun getBlur() = blur
 
     fun getLiveData() = liveData
 

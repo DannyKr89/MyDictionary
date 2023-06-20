@@ -10,12 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
+import org.koin.android.ext.android.inject
 import ru.dk.mydictionary.databinding.FragmentSearchDialogBinding
+import ru.dk.mydictionary.utils.BlurEffect
 
 class SearchDialogFragment : DialogFragment() {
 
     private var _binding: FragmentSearchDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val blur: BlurEffect by inject()
+
     var listener: ((String) -> Unit)? = null
 
     override fun onCreateView(
@@ -28,11 +33,12 @@ class SearchDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        blur.setBlur(16f)
         initViews()
     }
 
     private fun initViews() {
+
         with(binding) {
             searchEt.requestFocus()
             searchEt.addTextChangedListener(object : TextWatcher {
@@ -78,6 +84,7 @@ class SearchDialogFragment : DialogFragment() {
     override fun onDestroy() {
         listener = null
         _binding = null
+        blur.setBlur(0.01f)
         super.onDestroy()
     }
 

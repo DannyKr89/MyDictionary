@@ -59,7 +59,7 @@ class HistoryFragment : Fragment() {
                                 putParcelable("word", it)
                             })
                         )
-                        .addToBackStack(it.text)
+                        .addToBackStack(it.word)
                         .commit()
                 }
             }

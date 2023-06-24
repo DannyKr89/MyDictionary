@@ -1,14 +1,14 @@
 package ru.dk.mydictionary.ui.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.dk.mydictionary.data.model.DictionaryModel
+import ru.dk.mydictionary.data.model.Word
 
-class ItemListCallback : DiffUtil.ItemCallback<DictionaryModel>() {
-    override fun areItemsTheSame(oldItem: DictionaryModel, newItem: DictionaryModel): Boolean {
-        return oldItem.text == newItem.text
+class ItemListCallback : DiffUtil.ItemCallback<Word>() {
+    override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean {
+        return oldItem.word == newItem.word
     }
 
-    override fun areContentsTheSame(oldItem: DictionaryModel, newItem: DictionaryModel): Boolean {
+    override fun areContentsTheSame(oldItem: Word, newItem: Word): Boolean {
         return oldItem == newItem
     }
 

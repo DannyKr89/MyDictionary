@@ -12,10 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.dk.mydictionary.data.HistoryListRepoImpl
 import ru.dk.mydictionary.data.SearchListRepoImpl
-import ru.dk.mydictionary.domain.WordListRepo
-import ru.dk.mydictionary.data.retrofit.SearchListApi
-import ru.dk.mydictionary.data.room.HistoryDatabase
 import ru.dk.mydictionary.data.state.AppState
+import ru.dk.mydictionary.domain.WordListRepo
 import ru.dk.mydictionary.ui.history.HistoryViewModel
 import ru.dk.mydictionary.ui.list.SearchListViewModel
 import tech.thdev.network.flowcalladapterfactory.FlowCallAdapterFactory
@@ -30,7 +28,7 @@ val repository = module {
             .build()
     }
 
-    single<SearchListApi> { get<Retrofit>().create(SearchListApi::class.java) }
+    single<com.example.api.retrofit.SearchListApi> { get<Retrofit>().create(com.example.api.retrofit.SearchListApi::class.java) }
 
     single<WordListRepo>(named("search")) { SearchListRepoImpl(api = get()) }
 
@@ -63,7 +61,11 @@ val viewModel = module {
 
 val room = module {
     single {
-        Room.databaseBuilder(androidContext(), HistoryDatabase::class.java, "historyDB").build()
+        Room.databaseBuilder(
+            androidContext(),
+            com.example.history.room.HistoryDatabase::class.java,
+            "historyDB"
+        ).build()
     }
 
 }

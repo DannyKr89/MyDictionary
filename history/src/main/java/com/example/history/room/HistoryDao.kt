@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data.room
+package com.example.history.room
 
 import androidx.room.Dao
 import androidx.room.Delete

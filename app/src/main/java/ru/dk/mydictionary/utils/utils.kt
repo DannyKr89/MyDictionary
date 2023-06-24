@@ -1,20 +1,24 @@
-package ru.dk.mydictionary.data
+package ru.dk.mydictionary.utils
 
-import ru.dk.mydictionary.data.model.DictionaryModel
-import ru.dk.mydictionary.data.model.Meaning
-import ru.dk.mydictionary.data.model.Translation
-import ru.dk.mydictionary.data.room.HistoryWord
 
-fun convertHistoryToModel(historyWord: HistoryWord): DictionaryModel {
-    return DictionaryModel(
-        text = historyWord.word,
-        meanings = listOf(
-            Meaning(
-                imageUrl = historyWord.imageUrl,
-                soundUrl = null,
-                transcription = historyWord.transcription,
-                translation = Translation(historyWord.translation)
-            )
-        )
+import com.example.api.retrofit.model.WordDTO
+import com.example.history.room.HistoryWord
+import ru.dk.mydictionary.data.model.Word
+
+fun convertHistoryToWord(historyWord: HistoryWord): Word {
+    return Word(
+        word = historyWord.word,
+        imageUrl = historyWord.imageUrl,
+        transcription = historyWord.transcription,
+        translation = historyWord.translation
+    )
+}
+
+fun convertDTOToModel(wordDTO: WordDTO): Word {
+    return Word(
+        word = wordDTO.text,
+        translation = wordDTO.meanings.first().translation.text,
+        transcription = wordDTO.meanings.first().transcription,
+        imageUrl = wordDTO.meanings.first().imageUrl
     )
 }

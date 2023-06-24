@@ -54,9 +54,9 @@ class SearchListFragment : Fragment() {
                                 putParcelable("word", it)
                             })
                         )
-                        .addToBackStack(it.text)
+                        .addToBackStack(it.word)
                         .commit()
-            }
+                }
             }
             searchFab.setOnClickListener {
                 SearchDialogFragment.newInstance().apply {

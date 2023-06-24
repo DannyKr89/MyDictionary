@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.data.room
+package com.example.history.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,9 +11,9 @@ data class HistoryWord(
     @ColumnInfo(name = "word")
     val word: String,
     @ColumnInfo(name = "translation")
-    val translation: String?,
+    val translation: String = "",
     @ColumnInfo(name = "transcription")
-    val transcription: String?,
+    val transcription: String = "",
     @ColumnInfo(name = "image")
-    val imageUrl: String?,
+    val imageUrl: String = "",
 )

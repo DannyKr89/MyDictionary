@@ -4,23 +4,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.dk.mydictionary.data.model.DictionaryModel
+import ru.dk.mydictionary.data.model.Word
 import ru.dk.mydictionary.databinding.ListItemBinding
 
 class ItemListAdapter :
-    ListAdapter<DictionaryModel, ItemListAdapter.SearchListViewHolder>(ItemListCallback()) {
+    ListAdapter<Word, ItemListAdapter.SearchListViewHolder>(ItemListCallback()) {
 
-    var listener: ((DictionaryModel) -> Unit)? = null
+    var listener: ((Word) -> Unit)? = null
 
     inner class SearchListViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(dictionaryModel: DictionaryModel) {
+        fun bind(word: Word) {
             with(binding) {
                 root.setOnClickListener {
-                    listener?.invoke(dictionaryModel)
+                    listener?.invoke(word)
                 }
-                titleListItem.text = dictionaryModel.text
-                descriptionListItem.text = dictionaryModel.meanings?.first()?.translation?.text
+                titleListItem.text = word.word
+                descriptionListItem.text = word.translation
             }
         }
     }

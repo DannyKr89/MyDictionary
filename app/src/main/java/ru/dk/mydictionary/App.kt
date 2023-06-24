@@ -1,10 +1,12 @@
 package ru.dk.mydictionary
 
 import android.app.Application
+import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import ru.dk.mydictionary.di.repository
+import ru.dk.mydictionary.di.room
 import ru.dk.mydictionary.di.viewModel
 
 class App : Application() {
@@ -14,7 +16,8 @@ class App : Application() {
         instance = this
         startKoin {
             androidLogger(Level.DEBUG)
-            modules(listOf(repository, viewModel))
+            androidContext(this@App)
+            modules(listOf(repository, viewModel, room))
         }
 
     }

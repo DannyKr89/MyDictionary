@@ -8,14 +8,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/title_search_item"
+        android:id="@+id/title_list_item"
         style="@style/TitleTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Title" />
 
     <TextView
-        android:id="@+id/description_search_item"
+        android:id="@+id/description_list_item"
         style="@style/TextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

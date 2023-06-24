@@ -1,4 +1,4 @@
-package ru.dk.mydictionary.ui.list
+package ru.dk.mydictionary.ui.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,30 +10,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.dk.mydictionary.R
 import ru.dk.mydictionary.data.state.AppState
-import ru.dk.mydictionary.databinding.FragmentSearchBinding
+import ru.dk.mydictionary.databinding.FragmentHistoryBinding
 import ru.dk.mydictionary.ui.adapters.ItemListAdapter
 import ru.dk.mydictionary.ui.description.DescriptionFragment
-import ru.dk.mydictionary.ui.search.SearchDialogFragment
 
-class SearchListFragment : Fragment() {
+class HistoryFragment : Fragment() {
 
-    private var _binding: FragmentSearchBinding? = null
+    companion object {
+        fun newInstance() = HistoryFragment()
+    }
+
+    private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private var adapter = ItemListAdapter()
 
-    private val viewModel: SearchListViewModel by viewModel()
+    private val viewModel: HistoryViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater)
+        _binding = FragmentHistoryBinding.inflate(inflater)
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.getLiveData().observe(viewLifecycleOwner) {
             renderData(it)
         }
@@ -43,10 +49,9 @@ class SearchListFragment : Fragment() {
     private fun initViews() {
 
         with(binding) {
-            searchListRv.layoutManager = LinearLayoutManager(requireContext())
-            searchListRv.adapter = adapter.apply {
+            historyListRv.layoutManager = LinearLayoutManager(requireContext())
+            historyListRv.adapter = adapter.apply {
                 listener = {
-                    viewModel.saveWordToHistory(it)
                     parentFragmentManager.beginTransaction()
                         .replace(
                             R.id.main_container,
@@ -56,29 +61,9 @@ class SearchListFragment : Fragment() {
                         )
                         .addToBackStack(it.text)
                         .commit()
-            }
-            }
-            searchFab.setOnClickListener {
-                SearchDialogFragment.newInstance().apply {
-                    listener = {
-                        viewModel.requestData(it)
-                    }
-                }.show(parentFragmentManager, "search")
-            }
-            reloadBtn.setOnClickListener {
-                viewModel.getLastRequest()
+                }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        viewModel.onClear()
-        super.onDestroyView()
-    }
-
-    companion object {
-        fun newInstance() = SearchListFragment()
     }
 
     private fun renderData(appState: AppState) {
@@ -88,7 +73,6 @@ class SearchListFragment : Fragment() {
                     Toast.makeText(requireContext(), appState.throwable.message, Toast.LENGTH_SHORT)
                         .show()
                     successLayout.visibility = View.GONE
-                    errorLayout.visibility = View.VISIBLE
                     progressbar.visibility = View.GONE
                 }
             }
@@ -96,7 +80,6 @@ class SearchListFragment : Fragment() {
             is AppState.Loading -> {
                 with(binding) {
                     successLayout.visibility = View.GONE
-                    errorLayout.visibility = View.GONE
                     progressbar.visibility = View.VISIBLE
                 }
             }
@@ -104,17 +87,17 @@ class SearchListFragment : Fragment() {
             is AppState.Success -> {
                 with(binding) {
                     successLayout.visibility = View.VISIBLE
-                    errorLayout.visibility = View.GONE
                     progressbar.visibility = View.GONE
-                    if (appState.list.isNullOrEmpty()) {
-                        emptyLayout.visibility = View.VISIBLE
-                    } else {
-                        adapter.submitList(appState.list)
-                        emptyLayout.visibility = View.GONE
-                    }
+                    adapter.submitList(appState.list)
                 }
 
             }
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        viewModel.onClear()
+        super.onDestroyView()
     }
 }

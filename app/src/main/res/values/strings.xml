@@ -5,4 +5,10 @@
     <string name="reload_btn">Повторить</string>
     <string name="error">Ошибка!</string>
     <string name="nothing_to_show">Ничего не найдено!</string>
+    <string name="history">История</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="word">Слово:</string>
+    <string name="transcription">Транскрипция:</string>
+    <string name="translation">Перевод:</string>
 </resources>

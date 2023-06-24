@@ -5,23 +5,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.dk.mydictionary.data.model.DictionaryModel
-import ru.dk.mydictionary.databinding.SearchItemBinding
+import ru.dk.mydictionary.databinding.ListItemBinding
 
-class SearchListAdapter :
-    ListAdapter<DictionaryModel, SearchListAdapter.SearchListViewHolder>(SearchListCallback()) {
+class ItemListAdapter :
+    ListAdapter<DictionaryModel, ItemListAdapter.SearchListViewHolder>(ItemListCallback()) {
 
-    inner class SearchListViewHolder(private val binding: SearchItemBinding) :
+    var listener: ((DictionaryModel) -> Unit)? = null
+
+    inner class SearchListViewHolder(private val binding: ListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(dictionaryModel: DictionaryModel) {
             with(binding) {
-                titleSearchItem.text = dictionaryModel.text
-                descriptionSearchItem.text = dictionaryModel.meanings?.first()?.translation?.text
+                root.setOnClickListener {
+                    listener?.invoke(dictionaryModel)
+                }
+                titleListItem.text = dictionaryModel.text
+                descriptionListItem.text = dictionaryModel.meanings?.first()?.translation?.text
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchListViewHolder {
-        val binding = SearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SearchListViewHolder(binding)
     }
 
